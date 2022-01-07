@@ -1,0 +1,23 @@
+{
+  "name": "imdb-backend",
+  "version": "1.0.0",
+  "description": "Imdb backend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/selmaheric/imdb-backend.git"
+  },
+  "keywords": [
+    "imdb"
+  ],
+  "author": "Selma Heric",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/selmaheric/imdb-backend/issues"
+  },
+  "homepage": "https://github.com/selmaheric/imdb-backend#readme"
+}
