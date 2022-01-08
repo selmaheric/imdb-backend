@@ -5,19 +5,22 @@ const {
   moviesRouter,
   authRouter,
 } = require('./controllers');
-
 const config = require('./config');
 
-const app = express();
-
-app.use(bodyParser.json({ limit: 100 }));
 const port = config.PORT;
 
+/**
+ * Setup express
+ */
+const app = express();
+app.use(bodyParser.json({ limit: 100 }));
 app.use('/auth', authRouter);
 app.use('/movies', moviesRouter);
-
 app.get('/ping', (req, res) => res.send('pong'));
 
+/**
+ * Global error handler
+ */
 app.use((err, req, res, next) => {
   console.log('Error', err);
   res.status(err.statusCode || 500);
@@ -30,6 +33,9 @@ app.use((err, req, res, next) => {
   });
 });
 
+/**
+ * Run server
+ */
 app.listen(port, () => {
   console.log(`Example app listening at ${port}`);
 });
