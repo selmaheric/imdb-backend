@@ -1,12 +1,12 @@
 const express = require('express');
 const { validateQuery } = require('../middlewares/validation');
-const { getMoviesSchema } = require('../validation-schemas');
+const { getShowsSchema } = require('../validation-schemas');
 
 const router = express.Router();
 
 router.get(
   '/',
-  validateQuery(getMoviesSchema),
+  validateQuery(getShowsSchema),
   (req, res) => {
     res.send('Get all movies or shows');
   },

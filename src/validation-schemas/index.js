@@ -1,5 +1,5 @@
-const getMoviesSchema = require('./get-movies-schema');
+const getShowsSchema = require('./get-shows-schema');
 
 module.exports = {
-  getMoviesSchema,
+  getShowsSchema,
 };

@@ -1,12 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cookieSession = require('cookie-session');
+// const cookieSession = require('cookie-session');
 const cors = require('cors');
-const passport = require('passport');
+// const passport = require('passport');
 require('./middlewares/passport');
 
 const {
-  moviesRouter,
+  showsRouter,
   authRouter,
   usersRouter,
 } = require('./controllers');
@@ -28,16 +28,16 @@ app.use(
   }),
 );
 
-app.use(
-  cookieSession({ name: 'session', keys: ['SELMA_SECRET_1'], maxAge: 24 * 60 * 60 * 100 }),
-);
+// app.use(
+//   cookieSession({ name: 'session', keys: ['SELMA_SECRET_1'], maxAge: 24 * 60 * 60 * 100 }),
+// );
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
-app.use('/movies', moviesRouter);
+app.use('/shows', showsRouter);
 app.get('/ping', (req, res) => res.send('pong'));
 
 /**

@@ -1,9 +1,9 @@
 const auth = require('./auth');
-const movies = require('./movies');
+const shows = require('./shows');
 const users = require('./users');
 
 module.exports = {
-  moviesRouter: movies,
+  showsRouter: shows,
   authRouter: auth,
   usersRouter: users,
 };
