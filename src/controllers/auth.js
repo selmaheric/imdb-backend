@@ -1,14 +1,8 @@
 const express = require('express');
 const passport = require('passport');
+const config = require('../config');
 
 const router = express.Router();
-
-router.post('/login', (req, res) => {
-  res.send('Login');
-});
-
-const successLoginUrl = 'http://localhost:3000/';
-const errorLoginUrl = 'http://localhost:3000/login/error';
 
 router.get(
   '/google',
@@ -19,8 +13,8 @@ router.get(
   '/login/google/callback',
   passport.authenticate('google', {
     failureMessage: 'Cannot login to Google, please try again later!',
-    failureRedirect: errorLoginUrl,
-    successRedirect: successLoginUrl,
+    failureRedirect: config.GOOGLE_UNSUCCESS_LOGIN_URL,
+    successRedirect: config.GOOGLE_SUCCESS_LOGIN_URL,
   }),
   (req, res) => {
     console.log('User: ', req.user);
@@ -29,9 +23,7 @@ router.get(
 );
 
 router.get('/logout', (req, res) => {
-  console.log(req.session);
   req.logout();
-  console.log(req.session);
   res.status(200).send({});
 });
 
