@@ -5,6 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w src",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
     "test": "test"
   },
   "repository": {
@@ -25,6 +27,9 @@
     "express": "^4.17.2"
   },
   "devDependencies": {
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
     "nodemon": "^2.0.15"
   }
 }
