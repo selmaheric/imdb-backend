@@ -7,6 +7,10 @@
     "dev": "NODE_ENV=development nodemon -w src",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
+    "knex:migrate:make": "knex migrate:make --knexfile ./migrations/knexfile.js",
+    "knex:seed:make": "knex seed:make --knexfile ./migrations/knexfile.js",
+    "migrate:latest": "knex migrate:latest --knexfile ./migrations/knexfile.js && knex seed:run --knexfile ./migrations/knexfile.js",
+    "migrate:rollback": "knex migrate:rollback --all --knexfile ./migrations/knexfile.js",
     "test": "test"
   },
   "repository": {
