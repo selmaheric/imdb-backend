@@ -46,6 +46,9 @@ app.get('/ping', (req, res) => res.send('pong'));
 app.use((err, req, res, next) => {
   console.log('Error', err);
   res.status(err.statusCode || 500);
+  if (err.type === 'COOKIE_ERROR') {
+    req.logout();
+  }
   return res.json({
     name: err.name || 'Server error',
     message: err.message || 'Server error',

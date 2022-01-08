@@ -4,7 +4,7 @@ const config = require('../config');
 
 class Database {
   constructor() {
-    this.db = knex({
+    this.connection = knex({
       client: 'pg',
       connection: {
         host: config.DB_HOST,
@@ -15,7 +15,7 @@ class Database {
       },
     });
 
-    this.db.raw('SELECT 1+1 AS result')
+    this.connection.raw('SELECT 1+1 AS result')
       .then(() => {
         console.log('Successfully connected to postgress!');
       }).catch((error) => {
