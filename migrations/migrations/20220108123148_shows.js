@@ -31,7 +31,7 @@ exports.up = async function up(knex) {
       id_show uuid NOT NULL,
       id_actor uuid NOT NULL,
       PRIMARY KEY(id_show, id_actor),
-      CONSTRAINT no_duplicate_key UNIQUE (id_show, id_actor),
+      CONSTRAINT no_duplicate_key_cast UNIQUE (id_show, id_actor),
       CONSTRAINT id_show FOREIGN KEY (id_show)
         REFERENCES shows (id) MATCH SIMPLE
         ON UPDATE NO ACTION

@@ -1,5 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 
+const SELMA_HERIC = uuidv4();
+
 const GOOD_WILL_HUNTING = uuidv4();
 const THE_BOURNE_IDENTITY = uuidv4();
 const SAVING_PRIVATE_RYAN = uuidv4();
@@ -15,10 +17,23 @@ const ROBIN_WRIGHT = uuidv4();
 exports.seed = async function seed(knex) {
   // Deletes ALL existing cast, actors and shows
   await knex('show_cast').del();
+  await knex('ratings').del();
   await knex('actors').del();
   await knex('shows').del();
+  await knex('users').del();
 
-  // Inser shows
+  // Insert users
+  await knex('users').insert([
+    {
+      id: SELMA_HERIC,
+      first_name: 'Selma',
+      last_name: 'Heric',
+      email: 'selma.heric@gmail.com',
+      google_id: 'jedan',
+    },
+  ]);
+
+  // Insert shows
   await knex('shows').insert([
     {
       id: GOOD_WILL_HUNTING,
@@ -137,4 +152,52 @@ exports.seed = async function seed(knex) {
       id_actor: ROBIN_WRIGHT,
     },
   ]);
+
+  await knex('ratings').insert([
+    /**
+     * Good Will Hunting Rating
+     */
+    {
+      id_user: SELMA_HERIC,
+      id_show: GOOD_WILL_HUNTING,
+      rating: 5,
+    },
+    /**
+    * The Bourne Identity Rating
+    */
+    {
+      id_user: SELMA_HERIC,
+      id_show: THE_BOURNE_IDENTITY,
+      rating: 3,
+    },
+    /**
+    * Saving Private Ryan Rating
+    */
+    {
+      id_user: SELMA_HERIC,
+      id_show: SAVING_PRIVATE_RYAN,
+      rating: 4,
+    },
+    /**
+    * Forest Gump Rating
+    */
+    {
+      id_user: SELMA_HERIC,
+      id_show: FOREST_GUMP,
+      rating: 5,
+    },
+  ]);
+
+  const ratingSumAndCount = await knex.raw('select sum(rating), count(*), id_show from ratings group by id_show');
+
+  for (let i = 0; i < ratingSumAndCount.rows.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await knex('shows').update({
+      number_of_votes: Number(ratingSumAndCount.rows[i].count),
+      total_rating_sum: Number(ratingSumAndCount.rows[i].sum),
+      average_rating: +(ratingSumAndCount.rows[i].sum / ratingSumAndCount.rows[i].count).toFixed(2),
+    }).where({
+      id: ratingSumAndCount.rows[i].id_show,
+    });
+  }
 };
