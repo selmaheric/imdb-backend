@@ -1,8 +1,11 @@
 exports.up = async function up(knex) {
+  await knex.raw("CREATE TYPE show_type AS ENUM ('movie', 'tv_show')");
+
   await knex.raw(`
     CREATE TABLE IF NOT EXISTS shows
     (
       id uuid,
+      type show_type NOT NULL,
       title character varying(255) NOT NULL,
       description character varying(255) NOT NULL,
       release_date character varying(255) NOT NULL,
@@ -44,4 +47,5 @@ exports.down = async function down(knex) {
   await knex.raw('DROP TABLE IF EXISTS show_cast');
   await knex.raw('DROP TABLE IF EXISTS shows');
   await knex.raw('DROP TABLE IF EXISTS actors');
+  await knex.raw('DROP TYPE IF EXISTS show_type');
 };
