@@ -1,9 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieSession = require('cookie-session');
+const cors = require('cors');
+const passport = require('passport');
+require('./middlewares/passport');
 
 const {
   moviesRouter,
   authRouter,
+  usersRouter,
 } = require('./controllers');
 const config = require('./config');
 
@@ -14,7 +19,24 @@ const port = config.PORT;
  */
 const app = express();
 app.use(bodyParser.json({ limit: 100 }));
+
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,POST,PUT,DELETE',
+    credentials: true,
+  }),
+);
+
+app.use(
+  cookieSession({ name: 'session', keys: ['SELMA_SECRET_1'], maxAge: 24 * 60 * 60 * 100 }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/auth', authRouter);
+app.use('/users', usersRouter);
 app.use('/movies', moviesRouter);
 app.get('/ping', (req, res) => res.send('pong'));
 
