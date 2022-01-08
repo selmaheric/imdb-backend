@@ -1,12 +1,20 @@
 const express = require('express');
 
+const {
+  moviesRouter,
+  authRouter,
+} = require('./controllers');
+
 const config = require('./config');
 
 const app = express();
 const port = config.PORT;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.use('/auth', authRouter);
+app.use('/movies', moviesRouter);
+
+app.get('/ping', (req, res) => {
+  res.send('pong');
 });
 
 app.listen(port, () => {
