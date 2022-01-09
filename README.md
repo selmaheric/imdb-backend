@@ -18,7 +18,7 @@ docker run --name postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgre
 
 ### Environments
 
-Copy `.env.example` to `.env` at the project root.
+Copy `.env.sample` to `.env` at the project root.
 Set the variables in a file called `.env`.
 
 NOTE: The Api must be run on port 3001 because of google authentication
