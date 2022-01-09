@@ -6,13 +6,17 @@ const router = express.Router();
 
 router.get('/me', authenticate, async (req, res, next) => {
   if (req.user) {
-    const userDb = await db.connection('users').where({ id: req.user.id }).first();
-    res.send({
-      message: 'Successfully added show rating!',
-      data: {
-        user: userDb,
-      },
-    });
+    try {
+      const userDb = await db.connection('users').where({ id: req.user.id }).first();
+      res.send({
+        message: 'Successfully added show rating!',
+        data: {
+          user: userDb,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
   } else {
     next('Not Authenticated');
   }
