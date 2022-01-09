@@ -152,7 +152,7 @@ const addShowRating = async ({
         average_rating: +(totalRatingSum / numOfVotes).toFixed(1),
       })
       .where({ id: idShow })
-      .returning('*')
+      .returning(['id', 'number_of_votes', 'average_rating', 'total_rating_sum'])
       .transacting(trx);
 
     await trx.commit();
