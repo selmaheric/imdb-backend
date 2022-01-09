@@ -32,7 +32,7 @@ router.get(
 
       query += ' AND (title ILIKE ANY (:search) OR description ILIKE ANY (:search))';
       queryCount += ' AND (title ILIKE ANY (:search) OR description ILIKE ANY (:search))';
-      dbQueryParams.search = search;
+      dbQueryParams.search = searchFormatted;
     }
 
     let searchByPhraseValid = true;
@@ -84,7 +84,7 @@ router.get(
     query += ' ORDER BY average_rating DESC LIMIT :limit OFFSET :offset';
 
     const response = await db.connection.raw(query, dbQueryParams);
-    const responseCount = await db.connection.raw(queryCount, { type });
+    const responseCount = await db.connection.raw(queryCount, dbQueryParams);
 
     const shows = searchByPhraseValid ? response.rows : [];
 
