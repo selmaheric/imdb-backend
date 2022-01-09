@@ -76,7 +76,7 @@ const getFilteredShows = async ({
           operator = '>=';
         }
         if (atMost) {
-          operator = '<=';
+          operator = '<';
         }
         query += ` AND average_rating ${operator} :starsParam`;
         queryCount += ` AND average_rating ${operator} :starsParam`;
