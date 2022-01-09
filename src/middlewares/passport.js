@@ -21,12 +21,11 @@ passport.use(
           email: profile.emails[0].value,
           google_id: profile.id,
         };
-
         const userDb = await db.connection('users').where({ google_id: defaultUser.google_id }).first();
         if (!userDb) {
           await db.connection('users').insert(defaultUser);
         }
-        done(null, defaultUser);
+        done(null, userDb || defaultUser);
       } catch (error) {
         done(error, null);
       }
