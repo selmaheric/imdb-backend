@@ -98,6 +98,7 @@ router.get(
 
       const response = await db.connection.raw(query, dbQueryParams);
       const responseCount = await db.connection.raw(queryCount, dbQueryParams);
+      const { count } = responseCount.rows[0];
 
       const shows = searchByPhraseValid ? response.rows : [];
 
@@ -107,7 +108,8 @@ router.get(
           shows,
           limit,
           offset,
-          count: responseCount.rows && responseCount.rows[0] ? +responseCount.rows[0].count : 0,
+          count: +count,
+          totalPages: count % limit === 0 ? count / limit : Math.floor(count / limit) + 1,
         },
       });
     } catch (error) {
