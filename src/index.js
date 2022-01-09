@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const cookieSession = require('cookie-session');
 const cors = require('cors');
 const passport = require('passport');
@@ -19,6 +20,8 @@ const port = config.PORT;
  */
 const app = express();
 app.use(bodyParser.json({ limit: 100 }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
 app.use(
   cors({
