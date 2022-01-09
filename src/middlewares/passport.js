@@ -1,9 +1,8 @@
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const passport = require('passport');
-const { v4: uuidv4 } = require('uuid');
 const { COOKIE_ERROR } = require('../utils/errors');
 const config = require('../config');
-const db = require('../utils/database');
+const userService = require('../services/users.service');
 
 passport.use(
   new GoogleStrategy(
@@ -15,18 +14,8 @@ passport.use(
     },
     (async (req, accessToken, refreshToken, profile, done) => {
       try {
-        const defaultUser = {
-          id: uuidv4(),
-          first_name: profile.name.givenName,
-          last_name: profile.name.familyName,
-          email: profile.emails[0].value,
-          google_id: profile.id,
-        };
-        const userDb = await db.connection('users').where({ google_id: defaultUser.google_id }).first();
-        if (!userDb) {
-          await db.connection('users').insert(defaultUser);
-        }
-        done(null, userDb || defaultUser);
+        const user = await userService.upsertUserByGoogleId(profile);
+        done(null, user);
       } catch (error) {
         done(error, null);
       }
@@ -40,7 +29,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (user, done) => {
   try {
-    const userDb = await db.connection('users').where({ id: user.id }).first();
+    const userDb = await userService.getUserById({ idUser: user.id });
     if (!userDb) {
       done(COOKIE_ERROR, null);
     }
