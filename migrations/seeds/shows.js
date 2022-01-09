@@ -195,7 +195,7 @@ exports.seed = async function seed(knex) {
     await knex('shows').update({
       number_of_votes: Number(ratingSumAndCount.rows[i].count),
       total_rating_sum: Number(ratingSumAndCount.rows[i].sum),
-      average_rating: +(ratingSumAndCount.rows[i].sum / ratingSumAndCount.rows[i].count).toFixed(2),
+      average_rating: +(ratingSumAndCount.rows[i].sum / ratingSumAndCount.rows[i].count).toFixed(1),
     }).where({
       id: ratingSumAndCount.rows[i].id_show,
     });

@@ -1,6 +1,6 @@
 const express = require('express');
-const { validateQuery } = require('../middlewares/validation');
-const { getShowsSchema } = require('../validation-schemas');
+const { validateQuery, validateBody, validateParams } = require('../middlewares/validation');
+const { getShowsSchema, addRatingSchema } = require('../validation-schemas');
 const db = require('../utils/database');
 
 const router = express.Router();
@@ -86,6 +86,7 @@ router.get(
     const shows = searchByPhraseValid ? response.rows : [];
 
     res.send({
+      message: 'Successfully fetched shows!',
       data: {
         shows,
         limit,
@@ -96,8 +97,68 @@ router.get(
   },
 );
 
-router.post('/:id/add-rating', (req, res) => {
-  res.send('Add rating to a movie or a show');
-});
+router.post(
+  '/:id/add-rating',
+  validateParams({ id: { type: 'uuid' } }),
+  validateBody(addRatingSchema),
+  async (req, res, next) => {
+    const { user: { id: idUser } } = req;
+    const { id: idShow } = req.params;
+    const { rating } = req.body;
+
+    const trx = await db.connection.transaction();
+
+    try {
+      const show = await db.connection('shows')
+        .where({ id: idShow })
+        .first()
+        .transacting(trx)
+        .forUpdate();
+
+      const oldRating = await db.connection('ratings')
+        .where({
+          id_user: idUser,
+          id_show: idShow,
+        })
+        .first()
+        .transacting(trx)
+        .forUpdate();
+
+      await db.connection('ratings').insert({
+        id_user: idUser,
+        id_show: idShow,
+        rating,
+      })
+        .onConflict(['id_user', 'id_show'])
+        .merge({
+          rating,
+        })
+        .transacting(trx);
+
+      const numOfVotes = oldRating ? +show.number_of_votes : +show.number_of_votes + 1;
+      const totalRatingSum = oldRating
+        ? +show.total_rating_sum - oldRating.rating + rating
+        : +show.total_rating_sum + rating;
+
+      await db.connection('shows')
+        .update({
+          number_of_votes: numOfVotes,
+          total_rating_sum: totalRatingSum,
+          average_rating: +(totalRatingSum / numOfVotes).toFixed(1),
+        })
+        .where({ id: idShow })
+        .transacting(trx);
+
+      await trx.commit();
+
+      res.send({
+        message: 'Successfully added show rating!',
+      });
+    } catch (error) {
+      await trx.rollback();
+      next(error);
+    }
+  },
+);
 
 module.exports = router;
