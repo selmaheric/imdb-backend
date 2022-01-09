@@ -41,7 +41,7 @@ exports.seed = async function seed(knex) {
       title: 'Good Will Hunting',
       description: 'Will Hunting, a janitor at M.I.T., has a gift for mathematics, but needs help from a psychologist to find direction in his life.',
       release_date: '2 December 1997',
-      cover_image: 'cover_image',
+      cover_image: 'Good_Will_Hunting.jpeg',
     },
     {
       id: THE_BOURNE_IDENTITY,
@@ -49,7 +49,7 @@ exports.seed = async function seed(knex) {
       title: 'The Bourne Identity',
       description: 'A man is picked up by a fishing boat, bullet-riddled and suffering from amnesia, before racing to elude assassins and attempting to regain his memory.',
       release_date: '6 June 2002',
-      cover_image: 'cover_image',
+      cover_image: 'The_Bourne_Identity.jpeg',
     },
     {
       id: SAVING_PRIVATE_RYAN,
@@ -57,7 +57,7 @@ exports.seed = async function seed(knex) {
       title: 'Saving Private Ryan',
       description: 'Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action.',
       release_date: '21 July 1998',
-      cover_image: 'cover_image',
+      cover_image: 'Saving_Private_Ryan.jpeg',
     },
     {
       id: FOREST_GUMP,
@@ -65,7 +65,7 @@ exports.seed = async function seed(knex) {
       title: 'Forrest Gump',
       description: 'The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75, whose only desire is to be reunited with his childhood sweetheart.',
       release_date: '23 June 1994',
-      cover_image: 'cover_image',
+      cover_image: 'Forrest_Gump.jpeg',
     },
   ]);
 
