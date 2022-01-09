@@ -87,7 +87,7 @@ const getFilteredShows = async ({
     }
   }
 
-  query += ' ORDER BY average_rating DESC LIMIT :limit OFFSET :offset';
+  query += ' ORDER BY average_rating DESC, id DESC LIMIT :limit OFFSET :offset';
 
   const response = await db.connection.raw(query, dbQueryParams);
   const responseCount = await db.connection.raw(queryCount, dbQueryParams);
