@@ -22,7 +22,7 @@ app.use(bodyParser.json({ limit: 100 }));
 
 app.use(
   cors({
-    origin: config.FRONTEND_URL,
+    origin: 'http://localhost:3000',
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   }),

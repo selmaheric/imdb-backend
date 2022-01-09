@@ -1,13 +1,17 @@
 const express = require('express');
+const { authenticate } = require('../middlewares/authentication');
+const db = require('../utils/database');
 
 const router = express.Router();
 
-router.get('/me', (req, res, next) => {
+router.get('/me', authenticate, async (req, res, next) => {
   if (req.user) {
+    const userDb = await db.connection('users').where({ id: req.user.id }).first();
     res.send({
-      id: 1,
-      first_name: 'Selma',
-      last_name: 'Heric',
+      message: 'Successfully added show rating!',
+      data: {
+        user: userDb,
+      },
     });
   } else {
     next('Not Authenticated');
