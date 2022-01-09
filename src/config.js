@@ -15,6 +15,8 @@ const config = {
   GOOGLE_SUCCESS_LOGIN_URL: process.env.GOOGLE_SUCCESS_LOGIN_URL,
   GOOGLE_UNSUCCESS_LOGIN_URL: process.env.GOOGLE_UNSUCCESS_LOGIN_URL,
   COOKIE_SECRET: process.env.COOKIE_SECRET,
+  COOKIE_DURATION: process.env.COOKIE_DURATION || 24 * 60 * 60 * 100,
+  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3000',
 };
 
 module.exports = config;

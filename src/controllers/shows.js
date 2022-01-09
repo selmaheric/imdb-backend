@@ -138,6 +138,12 @@ router.post(
         })
         .transacting(trx);
 
+      /**
+       * If a new rating is added the number of votes is incremented
+       * and new rating is added to the total rating.
+       * If it was an update of an existing rating then
+       * the old rating is substracted and the new rating is added.
+       */
       const numOfVotes = oldRating ? +show.number_of_votes : +show.number_of_votes + 1;
       const totalRatingSum = oldRating
         ? +show.total_rating_sum - oldRating.rating + rating

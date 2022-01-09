@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const cookieSession = require('cookie-session');
+const cookieSession = require('cookie-session');
 const cors = require('cors');
-// const passport = require('passport');
+const passport = require('passport');
 require('./middlewares/passport');
 
 const {
@@ -22,18 +22,22 @@ app.use(bodyParser.json({ limit: 100 }));
 
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: config.FRONTEND_URL,
     methods: 'GET,POST,PUT,DELETE',
     credentials: true,
   }),
 );
 
-// app.use(
-//   cookieSession({ name: 'session', keys: ['SELMA_SECRET_1'], maxAge: 24 * 60 * 60 * 100 }),
-// );
+app.use(
+  cookieSession({
+    name: 'session',
+    keys: [config.COOKIE_SECRET],
+    maxAge: config.COOKIE_DURATION,
+  }),
+);
 
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
