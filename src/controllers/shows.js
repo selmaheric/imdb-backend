@@ -20,6 +20,17 @@ router.get(
     };
 
     let query = 'SELECT *, release_date::text FROM shows WHERE type = :type';
+
+    if (req.user) {
+      query = `
+      SELECT
+        *,
+        release_date::text,
+        (SELECT rating FROM ratings where id_user = :idUser and shows.id = ratings.id_show) as my_rating
+      FROM shows WHERE type = :type`;
+      dbQueryParams.idUser = req.user.id;
+    }
+
     let queryCount = 'SELECT count(*) FROM shows where type = :type';
 
     if (search && !searchByPhrase) {
@@ -149,19 +160,23 @@ router.post(
         ? +show.total_rating_sum - oldRating.rating + rating
         : +show.total_rating_sum + rating;
 
-      await db.connection('shows')
+      const newShow = await db.connection('shows')
         .update({
           number_of_votes: numOfVotes,
           total_rating_sum: totalRatingSum,
           average_rating: +(totalRatingSum / numOfVotes).toFixed(1),
         })
         .where({ id: idShow })
+        .returning('*')
         .transacting(trx);
 
       await trx.commit();
 
       res.send({
         message: 'Successfully added show rating!',
+        data: {
+          show: newShow && newShow[0],
+        },
       });
     } catch (error) {
       await trx.rollback();
