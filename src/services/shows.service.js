@@ -101,6 +101,70 @@ const getFilteredShows = async ({
   };
 };
 
+const addShowRating = async ({
+  idShow,
+  idUser,
+  rating,
+}) => {
+  const trx = await db.connection.transaction();
+  try {
+    const show = await db.connection('shows')
+      .where({ id: idShow })
+      .first()
+      .transacting(trx)
+      .forUpdate();
+
+    const oldRating = await db.connection('ratings')
+      .where({
+        id_user: idUser,
+        id_show: idShow,
+      })
+      .first()
+      .transacting(trx)
+      .forUpdate();
+
+    await db.connection('ratings').insert({
+      id_user: idUser,
+      id_show: idShow,
+      rating,
+    })
+      .onConflict(['id_user', 'id_show'])
+      .merge({
+        rating,
+      })
+      .transacting(trx);
+
+    /**
+       * If a new rating is added the number of votes is incremented
+       * and new rating is added to the total rating.
+       * If it was an update of an existing rating then
+       * the old rating is substracted and the new rating is added.
+       */
+    const numOfVotes = oldRating ? +show.number_of_votes : +show.number_of_votes + 1;
+    const totalRatingSum = oldRating
+      ? +show.total_rating_sum - oldRating.rating + rating
+      : +show.total_rating_sum + rating;
+
+    const newShow = await db.connection('shows')
+      .update({
+        number_of_votes: numOfVotes,
+        total_rating_sum: totalRatingSum,
+        average_rating: +(totalRatingSum / numOfVotes).toFixed(1),
+      })
+      .where({ id: idShow })
+      .returning('*')
+      .transacting(trx);
+
+    await trx.commit();
+
+    return newShow[0];
+  } catch (error) {
+    await trx.rollback();
+    throw error;
+  }
+};
+
 module.exports = {
   getFilteredShows,
+  addShowRating,
 };
