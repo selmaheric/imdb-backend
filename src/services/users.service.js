@@ -18,7 +18,7 @@ const upsertUserByGoogleId = async (profile) => {
   const userDb = await db.connection('users').where({ google_id: defaultUser.google_id }).first();
   if (!userDb) {
     const newUser = await db.connection('users').insert(defaultUser).returning('*');
-    return newUser;
+    return newUser[0];
   }
 
   return userDb;
