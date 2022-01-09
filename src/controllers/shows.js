@@ -20,7 +20,7 @@ router.get(
     };
 
     let query = 'SELECT *, release_date::text FROM shows WHERE type = :type';
-    const queryCount = 'SELECT * FROM shows where type = :type';
+    let queryCount = 'SELECT count(*) FROM shows where type = :type';
 
     if (search && !searchByPhrase) {
       const searchArray = search.split(' ');
@@ -31,6 +31,7 @@ router.get(
       }
 
       query += ' AND (title ILIKE ANY (:search) OR description ILIKE ANY (:search))';
+      queryCount += ' AND (title ILIKE ANY (:search) OR description ILIKE ANY (:search))';
       dbQueryParams.search = search;
     }
 
@@ -51,6 +52,7 @@ router.get(
         } else {
           const operator = isBefore ? '<=' : '>=';
           query += ` AND date_trunc('year', release_date::date) ${operator} date_trunc('year', :dateParam::date)`;
+          queryCount += ` AND date_trunc('year', release_date::date) ${operator} date_trunc('year', :dateParam::date)`;
           dbQueryParams.dateParam = date;
         }
       } else if (isStars) {
@@ -71,6 +73,7 @@ router.get(
             operator = '<=';
           }
           query += ` AND average_rating ${operator} :starsParam`;
+          queryCount += ` AND average_rating ${operator} :starsParam`;
           dbQueryParams.starsParam = Number(starsNumber[0]);
         }
       } else {
@@ -91,7 +94,7 @@ router.get(
         shows,
         limit,
         offset,
-        count: responseCount.rowCount,
+        count: responseCount.rows && responseCount.rows[0] ? +responseCount.rows[0].count : 0,
       },
     });
   },
