@@ -1,4 +1,5 @@
 const express = require('express');
+const { authenticate } = require('../middlewares/authentication');
 const { validateQuery, validateBody, validateParams } = require('../middlewares/validation');
 const { getShowsSchema, addRatingSchema } = require('../validation-schemas');
 const db = require('../utils/database');
@@ -117,6 +118,7 @@ router.get(
 
 router.post(
   '/:id/add-rating',
+  authenticate,
   validateParams({ id: { type: 'uuid' } }),
   validateBody(addRatingSchema),
   async (req, res, next) => {

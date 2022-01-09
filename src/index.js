@@ -56,6 +56,7 @@ app.use((err, req, res, next) => {
   if (err.type === 'COOKIE_ERROR') {
     req.logout();
   }
+
   return res.json({
     name: err.name || 'Server error',
     message: err.message || 'Server error',

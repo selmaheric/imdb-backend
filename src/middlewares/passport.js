@@ -1,6 +1,7 @@
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const passport = require('passport');
 const { v4: uuidv4 } = require('uuid');
+const { COOKIE_ERROR } = require('../utils/errors');
 const config = require('../config');
 const db = require('../utils/database');
 
@@ -41,13 +42,7 @@ passport.deserializeUser(async (user, done) => {
   try {
     const userDb = await db.connection('users').where({ id: user.id }).first();
     if (!userDb) {
-      const error = {
-        name: 'CookieError',
-        message: 'Cookie error!',
-        statusCode: 401,
-        type: 'COOKIE_ERROR',
-      };
-      done(error, null);
+      done(COOKIE_ERROR, null);
     }
   } catch (error) {
     done(error, null);
