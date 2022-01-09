@@ -6,7 +6,7 @@ const schema = {
   offset: {
     type: 'number', convert: true, optional: true, integer: true, positive: true, default: 0,
   },
-  search: { type: 'string', optional: true, min: 2 },
+  search: { type: 'string', optional: true },
   searchByPhrase: {
     type: 'boolean', convert: true, optional: true, default: false,
   },
